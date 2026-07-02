@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlmodel import SQLModel, Field
 
 class Startup(SQLModel, table=True):
@@ -5,4 +6,4 @@ class Startup(SQLModel, table=True):
     name: str
     category: str
     total_investment: int | None = None
-    ai_response: str
+    ai_response: Optional[str]
