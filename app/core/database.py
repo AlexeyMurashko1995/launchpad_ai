@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from app.core.config import DATABASE_URL
 from app.models.startup import Startup
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, select
 
 engine = create_async_engine(url=DATABASE_URL, echo=True)
 
@@ -21,3 +21,11 @@ async def create_startup(name: str, category: str):
         async with session.begin():
             startup = Startup(name=name, category=category)
             session.add(startup)
+
+
+async def get_all_startups():
+    async with async_maker_factory() as session:
+        async with session.begin():
+            query = select(Startup)
+            result = await session.execute(query)
+            return result.scalars().all()
