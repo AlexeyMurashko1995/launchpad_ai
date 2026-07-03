@@ -25,7 +25,6 @@ async def create_startup(name: str, category: str):
 
 async def get_all_startups():
     async with async_maker_factory() as session:
-        async with session.begin():
-            query = select(Startup)
-            result = await session.execute(query)
-            return result.scalars().all()
+        query = select(Startup)
+        result = await session.execute(query)
+        return result.scalars().all()
