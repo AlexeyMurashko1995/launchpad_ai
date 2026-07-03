@@ -6,4 +6,4 @@ class Startup(SQLModel, table=True):
     name: str
     category: str
     total_investment: int | None = None
-    ai_response: Optional[str]
+    ai_response: Optional[str] = None
