@@ -28,3 +28,12 @@ async def get_all_startups():
         query = select(Startup)
         result = await session.execute(query)
         return result.scalars().all()
+
+
+async def update_startup_ai_response(startup_id: int, ai_response: str):
+    async with async_maker_factory() as session:
+        async with session.begin():
+            startup = await session.get(Startup, startup_id)
+            if startup:
+                startup.ai_response = ai_response
+
