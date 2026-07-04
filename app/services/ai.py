@@ -15,6 +15,6 @@ async def generate_mock_analysis(startup_id: int):
             headers = {'Authorization': f'Bearer {API_KEY}'}
             payload = {'model': 'open-mixtral-8x7b', 'messages': [{'role': 'user', 'content': f'Analyze: {new_startup.name}, category: {new_startup.category}'}]}
             response = await client.post(url, headers=headers, json=payload)
-            print(response.status_code)
-            mock_text = f'Startup name: {new_startup.name}; category: {new_startup.category}'
-            await update_startup_ai_response(startup_id, mock_text)
+            data_response = response.json()
+            ai_text = data_response['choices'][0]['message']['content']
+            await update_startup_ai_response(startup_id, ai_text)
