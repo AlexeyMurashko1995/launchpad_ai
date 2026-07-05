@@ -1,5 +1,6 @@
 from typing import Optional
 from sqlmodel import SQLModel, Field
+from pydantic import BaseModel
 
 class Startup(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
@@ -7,3 +8,8 @@ class Startup(SQLModel, table=True):
     category: str
     total_investment: int | None = None
     ai_response: Optional[str] = None
+
+
+class StartupCreate(BaseModel):
+    name: str
+    category: str
