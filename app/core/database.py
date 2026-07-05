@@ -3,7 +3,6 @@ from app.core.config import DATABASE_URL
 from app.models.startup import Startup
 from sqlmodel import SQLModel, select
 from fastapi import BackgroundTasks
-from app.services.ai import generate_mock_analysis
 
 engine = create_async_engine(url=DATABASE_URL, echo=True)
 
@@ -19,6 +18,7 @@ async def init_db():
 
 
 async def create_startup(name: str, category: str, background_tasks: BackgroundTasks):
+    from app.services.ai import generate_mock_analysis
     async with async_maker_factory() as session:
         async with session.begin():
             startup = Startup(name=name, category=category)
