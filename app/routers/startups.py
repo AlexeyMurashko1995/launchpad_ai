@@ -7,7 +7,7 @@ from app.models.startup import StartupPublic
 
 router = APIRouter(prefix='/startups', tags=['Startups'])
 
-@router.get('/')
+@router.get('/', response_model=list[StartupPublic])
 async def get_startups():
     return await get_all_startups()
 
