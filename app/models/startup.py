@@ -13,3 +13,10 @@ class Startup(SQLModel, table=True):
 class StartupCreate(BaseModel):
     name: str
     category: str
+
+
+class StartupPublic(BaseModel):
+    id: int
+    name: str
+    category: str
+    ai_response: str | None = None
