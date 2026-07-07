@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from app.core.config import DATABASE_URL
-from app.models.startup import Startup
+from app.models.startup import Startup, StartupUpdate
 from sqlmodel import SQLModel, select
 from fastapi import BackgroundTasks
 
@@ -60,14 +60,13 @@ async def delete_startup(startup_id: int):
             return True
 
 
-async def update_startup(startup_id: int, name: str = None, category: str = None):
+async def update_startup(startup_id: int, startup_data: StartupUpdate):
     async with async_maker_factory() as session:
         async with session.begin():
             startup = await session.get(Startup, startup_id)
             if not startup:
                 return False
-            if name is not None:
-                startup.name = name
-            if category is not None:
-                startup.category = category
+            update_dict = startup_data.model_dump(exclude_unset=True)
+            for key, value in update_dict.items():
+                setattr(startup, key, value)
             return True
