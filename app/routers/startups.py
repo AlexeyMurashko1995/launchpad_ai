@@ -1,10 +1,9 @@
 from fastapi import APIRouter, BackgroundTasks, HTTPException, status
 from app.core.database import get_all_startups
 from app.core.database import create_startup
-from app.models.startup import StartupCreate
+from app.models.startup import StartupCreate, StartupPublic, StartupUpdate
 from app.core.database import delete_startup
 from app.core.database import get_startup_by_id
-from app.models.startup import StartupPublic
 from app.core.database import update_startup
 
 router = APIRouter(prefix='/startups', tags=['Startups'])
@@ -36,8 +35,8 @@ async def remove_startup(startup_id: int):
 
 
 @router.patch('/{startup_id}')
-async def modify_startup(startup_id: int, name: str | None = None, category: str | None = None):
-    updated_startup = await update_startup(startup_id, name, category)
+async def modify_startup(startup_id: int, startup_data: StartupUpdate):
+    updated_startup = await update_startup(startup_id, startup_data)
     if not updated_startup:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail='Startup not found')
     return {'status': 'updated'}
