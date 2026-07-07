@@ -20,3 +20,8 @@ class StartupPublic(BaseModel):
     name: str
     category: str
     ai_response: str | None = None
+
+
+class StartupUpdate(BaseModel):
+    name: str | None = None
+    category: str | None = None
