@@ -5,6 +5,7 @@ from app.models.startup import StartupCreate
 from app.core.database import delete_startup
 from app.core.database import get_startup_by_id
 from app.models.startup import StartupPublic
+from app.core.database import update_startup
 
 router = APIRouter(prefix='/startups', tags=['Startups'])
 
@@ -32,3 +33,11 @@ async def remove_startup(startup_id: int):
     if not deleted_startup:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail='Startup not found')
     return {'message': f'startup #{startup_id} was successfully deleted'}
+
+
+@router.patch('/{startup_id}')
+async def modify_startup(startup_id: int, name: str | None = None, category: str | None = None):
+    updated_startup = await update_startup(startup_id, name, category)
+    if not updated_startup:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail='Startup not found')
+    return {'status': 'updated'}
