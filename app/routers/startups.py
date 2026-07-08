@@ -5,6 +5,7 @@ from app.models.startup import StartupCreate, StartupPublic, StartupUpdate
 from app.core.database import delete_startup
 from app.core.database import get_startup_by_id
 from app.core.database import update_startup
+from app.services.ai import generate_mock_analysis
 
 router = APIRouter(prefix='/startups', tags=['Startups'])
 
@@ -15,7 +16,9 @@ async def get_startups():
 
 @router.post('/')
 async def add_new_startup(startup_data: StartupCreate, background_tasks: BackgroundTasks):
-    return await create_startup(name=startup_data.name, category=startup_data.category, background_tasks=background_tasks)
+    new_startup = await create_startup(name=startup_data.name, category=startup_data.category)
+    background_tasks.add_task(generate_mock_analysis, new_startup.id)
+    return new_startup
 
 
 @router.get('/{startup_id}', response_model=StartupPublic)
