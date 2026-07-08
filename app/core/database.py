@@ -2,7 +2,6 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 from app.core.config import DATABASE_URL
 from app.models.startup import Startup, StartupUpdate
 from sqlmodel import SQLModel, select
-from fastapi import BackgroundTasks
 
 engine = create_async_engine(url=DATABASE_URL, echo=True)
 
@@ -17,15 +16,12 @@ async def init_db():
         await conn.run_sync(SQLModel.metadata.create_all)
 
 
-async def create_startup(name: str, category: str, background_tasks: BackgroundTasks):
-    from app.services.ai import generate_mock_analysis
+async def create_startup(name: str, category: str):
     async with async_maker_factory() as session:
         async with session.begin():
             startup = Startup(name=name, category=category)
             session.add(startup)
-        startup_id = startup.id
-        background_tasks.add_task(generate_mock_analysis, startup_id)
-        return {'status': 'created'}
+        return startup
 
 
 async def get_all_startups():
