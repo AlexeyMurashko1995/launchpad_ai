@@ -16,12 +16,16 @@ async def init_db():
         await conn.run_sync(SQLModel.metadata.create_all)
 
 
-async def create_startup(name: str, category: str):
+async def get_db():
     async with async_maker_factory() as session:
-        async with session.begin():
-            startup = Startup(name=name, category=category)
-            session.add(startup)
-        return startup
+        yield session
+
+
+async def create_startup(name: str, category: str, session: AsyncSession):
+    startup = Startup(name=name, category=category)
+    session.add(startup)
+    await session.commit()
+    return startup
 
 
 async def get_all_startups():
