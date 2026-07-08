@@ -1,6 +1,6 @@
 from typing import Optional
 from sqlmodel import SQLModel, Field
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 class Startup(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
@@ -13,6 +13,18 @@ class Startup(SQLModel, table=True):
 class StartupCreate(BaseModel):
     name: str
     category: str
+
+
+    @field_validator('name')
+    @classmethod
+    def clean_name(cls, value: str) -> str:
+        return value.strip()
+
+
+    @field_validator('category')
+    @classmethod
+    def clean_category(cls, value: str) -> str:
+        return value.strip().lower()
 
 
 class StartupPublic(BaseModel):
