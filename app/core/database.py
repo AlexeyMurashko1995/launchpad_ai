@@ -42,11 +42,10 @@ async def update_startup_ai_response(startup_id: int, ai_response: str):
                 startup.ai_response = ai_response
 
 
-async def get_startup_by_id(startup_id: int):
-    async with async_maker_factory() as session:
-        target_startup = await session.get(Startup, startup_id)
-        if target_startup:
-            return target_startup
+async def get_startup_by_id(startup_id: int, session: AsyncSession):
+    target_startup = await session.get(Startup, startup_id)
+    if target_startup:
+        return target_startup
 
 
 async def delete_startup(startup_id: int):

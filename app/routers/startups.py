@@ -19,8 +19,8 @@ async def add_new_startup(startup_data: StartupCreate, background_tasks: Backgro
 
 
 @router.get('/{startup_id}', response_model=StartupPublic)
-async def get_target_startup(startup_id: int):
-    target_startup = await get_startup_by_id(startup_id)
+async def get_target_startup(startup_id: int, session: AsyncSession = Depends(get_db)):
+    target_startup = await get_startup_by_id(startup_id, session=session)
     if not target_startup:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail='Startup not found')
     return target_startup
