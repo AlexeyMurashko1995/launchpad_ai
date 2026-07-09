@@ -28,11 +28,10 @@ async def create_startup(name: str, category: str, session: AsyncSession):
     return startup
 
 
-async def get_all_startups():
-    async with async_maker_factory() as session:
-        query = select(Startup)
-        result = await session.execute(query)
-        return result.scalars().all()
+async def get_all_startups(session: AsyncSession):
+    query = select(Startup)
+    result = await session.execute(query)
+    return result.scalars().all()
 
 
 async def update_startup_ai_response(startup_id: int, ai_response: str):

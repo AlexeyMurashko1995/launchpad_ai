@@ -6,8 +6,9 @@ from app.services.ai import generate_mock_analysis
 router = APIRouter(prefix='/startups', tags=['Startups'])
 
 @router.get('/', response_model=list[StartupPublic])
-async def get_startups():
-    return await get_all_startups()
+async def get_startups(session: AsyncSession = Depends(get_db)):
+    all_startups = get_all_startups(session=session)
+    return await all_startups
 
 
 @router.post('/')
