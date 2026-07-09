@@ -27,8 +27,8 @@ async def get_target_startup(startup_id: int, session: AsyncSession = Depends(ge
 
 
 @router.delete('/{startup_id}')
-async def remove_startup(startup_id: int):
-    deleted_startup = await delete_startup(startup_id)
+async def remove_startup(startup_id: int, session: AsyncSession = Depends(get_db)):
+    deleted_startup = await delete_startup(startup_id, session=session)
     if not deleted_startup:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail='Startup not found')
     return {'message': f'startup #{startup_id} was successfully deleted'}
