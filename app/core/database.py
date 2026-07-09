@@ -57,13 +57,12 @@ async def delete_startup(startup_id: int, session: AsyncSession):
         return True
 
 
-async def update_startup(startup_id: int, startup_data: StartupUpdate):
-    async with async_maker_factory() as session:
-        async with session.begin():
-            startup = await session.get(Startup, startup_id)
-            if not startup:
-                return False
-            update_dict = startup_data.model_dump(exclude_unset=True)
-            for key, value in update_dict.items():
-                setattr(startup, key, value)
-            return True
+async def update_startup(startup_id: int, startup_data: StartupUpdate, session: AsyncSession):
+    async with session.begin():
+        startup = await session.get(Startup, startup_id)
+        if not startup:
+            return False
+        update_dict = startup_data.model_dump(exclude_unset=True)
+        for key, value in update_dict.items():
+            setattr(startup, key, value)
+        return True

@@ -35,8 +35,8 @@ async def remove_startup(startup_id: int, session: AsyncSession = Depends(get_db
 
 
 @router.patch('/{startup_id}')
-async def modify_startup(startup_id: int, startup_data: StartupUpdate):
-    updated_startup = await update_startup(startup_id, startup_data)
+async def modify_startup(startup_id: int, startup_data: StartupUpdate, session: AsyncSession = Depends(get_db)):
+    updated_startup = await update_startup(startup_id, startup_data, session=session)
     if not updated_startup:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail='Startup not found')
     return {'status': 'updated'}
