@@ -7,8 +7,8 @@ router = APIRouter(prefix='/startups', tags=['Startups'])
 
 @router.get('/', response_model=list[StartupPublic])
 async def get_startups(session: AsyncSession = Depends(get_db)):
-    all_startups = get_all_startups(session=session)
-    return await all_startups
+    all_startups = await get_all_startups(session=session)
+    return all_startups
 
 
 @router.post('/', response_model=StartupPublic)
