@@ -24,4 +24,4 @@ async def generate_mock_analysis(startup_id: int):
                 ai_text = 'Connection error. Please try again later'
             except (KeyError, IndexError) as parse_err:
                 ai_text = 'Error processing AI results'
-    await update_startup_ai_response(startup_id, ai_text)
+            await update_startup_ai_response(startup_id, ai_text)
