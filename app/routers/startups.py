@@ -11,7 +11,7 @@ async def get_startups(session: AsyncSession = Depends(get_db)):
     return await all_startups
 
 
-@router.post('/')
+@router.post('/', response_model=StartupPublic)
 async def add_new_startup(startup_data: StartupCreate, background_tasks: BackgroundTasks, session: AsyncSession = Depends(get_db)):
     new_startup = await create_startup(name=startup_data.name, category=startup_data.category, session=session)
     background_tasks.add_task(generate_mock_analysis, new_startup.id)
@@ -34,9 +34,9 @@ async def remove_startup(startup_id: int, session: AsyncSession = Depends(get_db
     return {'message': f'startup #{startup_id} was successfully deleted'}
 
 
-@router.patch('/{startup_id}')
+@router.patch('/{startup_id}', response_model=StartupPublic)
 async def modify_startup(startup_id: int, startup_data: StartupUpdate, session: AsyncSession = Depends(get_db)):
     updated_startup = await update_startup(startup_id, startup_data, session=session)
-    if not updated_startup:
+    if updated_startup is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail='Startup not found')
-    return {'status': 'updated'}
+    return updated_startup

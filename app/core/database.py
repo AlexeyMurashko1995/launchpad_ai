@@ -61,8 +61,8 @@ async def update_startup(startup_id: int, startup_data: StartupUpdate, session: 
     async with session.begin():
         startup = await session.get(Startup, startup_id)
         if not startup:
-            return False
+            return None
         update_dict = startup_data.model_dump(exclude_unset=True)
         for key, value in update_dict.items():
             setattr(startup, key, value)
-        return True
+        return startup
