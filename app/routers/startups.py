@@ -2,6 +2,8 @@ from fastapi import APIRouter, BackgroundTasks, HTTPException, status, Depends
 from app.models.startup import StartupCreate, StartupPublic, StartupUpdate
 from app.core.database import delete_startup, get_startup_by_id, update_startup, get_all_startups, create_startup, get_db, AsyncSession
 from app.services.ai import generate_mock_analysis
+from app.core.security import get_current_user
+from app.models.user import User
 
 router = APIRouter(prefix='/startups', tags=['Startups'])
 
@@ -27,7 +29,7 @@ async def get_target_startup(startup_id: int, session: AsyncSession = Depends(ge
 
 
 @router.delete('/{startup_id}')
-async def remove_startup(startup_id: int, session: AsyncSession = Depends(get_db)):
+async def remove_startup(startup_id: int, session: AsyncSession = Depends(get_db), user: User = Depends(get_current_user) ):
     deleted_startup = await delete_startup(startup_id, session=session)
     if not deleted_startup:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail='Startup not found')
