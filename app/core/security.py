@@ -6,11 +6,21 @@ import jwt
 from jwt.exceptions import PyJWTError
 from sqlmodel import SQLModel, select
 from app.models.user import User
+from passlib.context import CryptContext
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
 
 SECRET_KEY = 'my_secret_key'
+
 ALGORITHM = 'HS256'
+
+pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
+
+
+async def get_password_hash(password: str) -> str:
+    hash_password = pwd_context.hash(password)
+    return hash_password
+
 
 async def get_current_user(token: str = Depends(oauth2_scheme), session: AsyncSession = Depends(get_db)):
     try:
@@ -26,3 +36,5 @@ async def get_current_user(token: str = Depends(oauth2_scheme), session: AsyncSe
         return user
     except PyJWTError:
         raise HTTPException(status_code=401, detail='Could not validate credentials')
+
+
