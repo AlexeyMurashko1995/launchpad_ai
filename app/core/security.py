@@ -22,6 +22,10 @@ async def get_password_hash(password: str) -> str:
     return hash_password
 
 
+def verify_password(plain_password: str, hash_password: str):
+    return pwd_context.verify(plain_password, hash_password)
+
+
 async def get_current_user(token: str = Depends(oauth2_scheme), session: AsyncSession = Depends(get_db)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
