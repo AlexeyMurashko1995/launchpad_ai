@@ -7,6 +7,7 @@ from jwt.exceptions import PyJWTError
 from sqlmodel import SQLModel, select
 from app.models.user import User
 from passlib.context import CryptContext
+from datetime import datetime, timedelta, timezone
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
 
@@ -17,7 +18,18 @@ ALGORITHM = 'HS256'
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
-async def get_password_hash(password: str) -> str:
+def create_access_token(data: dict, expires_delta: timedelta | None) -> str:
+    to_encode = data.copy()
+    if expires_delta:
+        expire = expires_delta + datetime.now(timezone.utc)
+    else:
+        expire = timedelta(minutes=15) + datetime.now(timezone.utc)
+    to_encode.update({'exp': expire})
+    token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return token
+
+
+def get_password_hash(password: str) -> str:
     hash_password = pwd_context.hash(password)
     return hash_password
 
