@@ -2,11 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from app.models.user import User, UserCreate, UserPublic
 from app.core.database import get_db
-from app.core.security import get_password_hash, verify_password, create_access_token
+from app.core.security import get_password_hash, verify_password, create_access_token, get_current_user
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
 router = APIRouter(prefix='/auth', tags=['Auth'])
+
+
+@router.get('/me', response_model=UserPublic)
+async def get_me(current_user: User = Depends(get_current_user)):
+    return current_user
 
 
 @router.post('/register', response_model=UserPublic)
