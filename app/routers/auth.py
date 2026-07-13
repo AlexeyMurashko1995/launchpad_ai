@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
 from app.models.user import User, UserCreate, UserPublic
 from app.core.database import get_db
-from app.core.security import get_password_hash, verify_password
+from app.core.security import get_password_hash, verify_password, create_access_token
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
@@ -21,4 +22,18 @@ async def register_user(user_data: UserCreate, session: AsyncSession = Depends(g
     await session.commit()
     await session.refresh(new_user)
     return new_user
+
+
+@router.post('/login')
+async def login_user(user_data: OAuth2PasswordRequestForm = Depends(), session: AsyncSession = Depends(get_db)):
+    query = select(User).where(user_data.username==User.username)
+    result = await session.execute(query)
+    bd_user = result.scalar_one_or_none()
+    if not bd_user:
+        raise HTTPException(status_code=401, detail='Login or password are incorrect')
+    comparison = verify_password(user_data.password, bd_user.hashed_password)
+    if not comparison:
+        raise HTTPException(status_code=401, detail='Login or password are incorrect')
+    access_token = create_access_token(data={'sub': bd_user.username})
+    return {'access_token': access_token, 'token_type': 'bearer'}
 
