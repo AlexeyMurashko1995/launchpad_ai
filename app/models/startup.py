@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from pydantic import BaseModel, field_validator
 
 class Startup(SQLModel, table=True):
@@ -8,6 +8,8 @@ class Startup(SQLModel, table=True):
     category: str
     total_investment: int | None = None
     ai_response: Optional[str] = None
+    user_id: int | None = Field(foreign_key='user.id')
+    user: Optional['User'] = Relationship(back_populates='startups')
 
 
 class StartupCreate(BaseModel):
