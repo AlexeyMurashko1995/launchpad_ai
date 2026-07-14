@@ -22,8 +22,8 @@ async def get_db():
         yield session
 
 
-async def create_startup(name: str, category: str, session: AsyncSession):
-    startup = Startup(name=name, category=category)
+async def create_startup(name: str, category: str, user_id: int, session: AsyncSession):
+    startup = Startup(name=name, category=category, user_id=user_id)
     session.add(startup)
     await session.commit()
     return startup
