@@ -14,8 +14,8 @@ async def get_startups(session: AsyncSession = Depends(get_db)):
 
 
 @router.post('/', response_model=StartupPublic)
-async def add_new_startup(startup_data: StartupCreate, background_tasks: BackgroundTasks, session: AsyncSession = Depends(get_db)):
-    new_startup = await create_startup(name=startup_data.name, category=startup_data.category, session=session)
+async def add_new_startup(startup_data: StartupCreate, background_tasks: BackgroundTasks, session: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    new_startup = await create_startup(name=startup_data.name, category=startup_data.category, user_id = current_user.id, session=session)
     background_tasks.add_task(generate_mock_analysis, new_startup.id)
     return new_startup
 
