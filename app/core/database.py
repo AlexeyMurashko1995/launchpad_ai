@@ -45,7 +45,9 @@ async def update_startup_ai_response(startup_id: int, ai_response: str):
 
 
 async def get_startup_by_id(startup_id: int, session: AsyncSession):
-    target_startup = await session.get(Startup, startup_id)
+    query = select(Startup).where(startup_id==Startup.id).options(joinedload(Startup.user))
+    result = await session.execute(query)
+    target_startup = result.scalar_one_or_none()
     if target_startup:
         return target_startup
 
