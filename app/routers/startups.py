@@ -76,7 +76,13 @@ async def modify_startup(
     startup_id: int,
     startup_data: StartupUpdate,
     session: AsyncSession = Depends(get_db),
+    user: User = Depends(get_current_user)
 ):
+    target_startup = await get_startup_by_id(startup_id=startup_id, session=session)
+    if not target_startup:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Startup not found')
+    if target_startup.user_id != user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='You do not have permission to modify this startup')
     updated_startup = await update_startup(
         startup_id, startup_data, session=session
     )
