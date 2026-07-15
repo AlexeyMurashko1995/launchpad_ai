@@ -1,6 +1,7 @@
 from typing import Optional
 from sqlmodel import SQLModel, Field, Relationship
 from pydantic import BaseModel, field_validator
+from app.models.user import UserPublic
 
 class Startup(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
@@ -34,6 +35,7 @@ class StartupPublic(BaseModel):
     name: str
     category: str
     ai_response: str | None = None
+    user: UserPublic | None = None
 
 
 class StartupUpdate(BaseModel):

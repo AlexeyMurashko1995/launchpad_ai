@@ -1,3 +1,4 @@
+from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from app.core.config import DATABASE_URL
 from app.models.startup import Startup, StartupUpdate
@@ -30,7 +31,7 @@ async def create_startup(name: str, category: str, user_id: int, session: AsyncS
 
 
 async def get_all_startups(session: AsyncSession):
-    query = select(Startup)
+    query = select(Startup).options(joinedload(Startup.user))
     result = await session.execute(query)
     return result.scalars().all()
 
