@@ -41,3 +41,10 @@ class StartupPublic(BaseModel):
 class StartupUpdate(BaseModel):
     name: str | None = None
     category: str | None = None
+
+
+class StartupAIAnalysis(BaseModel):
+    strengths: list[str] = Field(description='Key advantages of the project')
+    weaknesses: list[str] = Field(description='Project weaknesses and vulnerabilities')
+    risks: list[str] = Field(description='Potential threats and risks to the business')
+    overall_score: int = Field(description='Overall project viability rating (1–10)')
