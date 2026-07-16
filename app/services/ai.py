@@ -3,6 +3,7 @@ from app.models.startup import StartupAIAnalysis
 import httpx
 import os
 from dotenv import load_dotenv
+from pydantic import ValidationError
 
 load_dotenv()
 
@@ -22,8 +23,12 @@ async def generate_mock_analysis(startup_id: int):
                     response = await client.post(url, headers=headers, json=payload)
                     data_response = response.json()
                     ai_text = data_response['choices'][0]['message']['content']
+                    validated_data = StartupAIAnalysis.model_validate_json(ai_text)
+                    ai_text = validated_data.model_dump_json()
             except httpx.HTTPError as net_err:
                 ai_text = 'Connection error. Please try again later'
             except (KeyError, IndexError) as parse_err:
                 ai_text = 'Error processing AI results'
+            except ValidationError as val_err:
+                ai_text = 'Error validating AI results'
             await update_startup_ai_response(startup_id, ai_text)
