@@ -58,3 +58,10 @@ class StartupPublic(BaseModel):
 class StartupUpdate(BaseModel):
     name: str | None = None
     category: str | None = None
+
+    @field_validator('name')
+    @classmethod
+    def clean_name(cls, value: str) -> str:
+        if value:
+            return value.strip()
+        return value
