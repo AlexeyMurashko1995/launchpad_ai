@@ -48,6 +48,8 @@ class StartupPublic(BaseModel):
     @field_validator('ai_response', mode='before')
     @classmethod
     def parse_ai_response(cls, value):
+        if isinstance(value, str):
+            return json.loads(value)
         return value
 
 class StartupUpdate(BaseModel):
