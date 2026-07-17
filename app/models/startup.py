@@ -49,7 +49,10 @@ class StartupPublic(BaseModel):
     @classmethod
     def parse_ai_response(cls, value):
         if isinstance(value, str):
-            return json.loads(value)
+            try:
+                return json.loads(value)
+            except json.JSONDecodeError:
+                return None
         return value
 
 class StartupUpdate(BaseModel):
