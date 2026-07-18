@@ -22,15 +22,21 @@ async def generate_ai_analysis(startup_id: int):
                     payload = {
                         'model': 'open-mixtral-8x7b',
                         'response_format': {
-                            'type': 'json_object',
-                            'schema': schema,
+                            'type': 'json_object'
                         },
                         'messages': [
                             {
                                 'role': 'user',
                                 'content': (
-                                    f'Analyze: {new_startup.name}, '
-                                    f'category: {new_startup.category}'
+                                    f"Analyze the startup project. Name: {new_startup.name}, Category: {new_startup.category}. "
+                                    f"You must return a JSON object with exactly the following structure: "
+                                    f"{{"
+                                    f"  \"strengths\": [\"string\", \"string\"],"
+                                    f"  \"weaknesses\": [\"string\", \"string\"],"
+                                    f"  \"risks\": [\"string\", \"string\"],"
+                                    f"  \"overall_score\": 1"
+                                    f"}}"
+                                    f"Do not include any formatting like Markdown blocks (e.g. ```json), code fences, or any text outside the JSON object."
                                 ),
                             }
                         ],
