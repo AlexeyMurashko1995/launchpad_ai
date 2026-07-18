@@ -1,5 +1,4 @@
-import os
-from dotenv import load_dotenv
+from app.core.config import MISTRAL_API_KEY
 import httpx
 from pydantic import ValidationError
 
@@ -10,11 +9,6 @@ from app.core.database import (
 )
 from app.models.startup import StartupAIAnalysis
 
-load_dotenv()
-
-API_KEY = os.getenv('MISTRAL_API_KEY')
-
-
 async def generate_mock_analysis(startup_id: int):
     async with async_maker_factory() as session:
         new_startup = await get_startup_by_id(startup_id, session=session)
@@ -24,7 +18,7 @@ async def generate_mock_analysis(startup_id: int):
             try:
                 async with httpx.AsyncClient(timeout=30.0) as client:
                     url = 'https://api.mistral.ai/v1/chat/completions'
-                    headers = {'Authorization': f'Bearer {API_KEY}'}
+                    headers = {'Authorization': f'Bearer {MISTRAL_API_KEY}'}
                     payload = {
                         'model': 'open-mixtral-8x7b',
                         'response_format': {
