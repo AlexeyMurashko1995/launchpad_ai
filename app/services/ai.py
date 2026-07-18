@@ -9,7 +9,7 @@ from app.core.database import (
 )
 from app.models.startup import StartupAIAnalysis
 
-async def generate_mock_analysis(startup_id: int):
+async def generate_ai_analysis(startup_id: int):
     async with async_maker_factory() as session:
         new_startup = await get_startup_by_id(startup_id, session=session)
         if new_startup:

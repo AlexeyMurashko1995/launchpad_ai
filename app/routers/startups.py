@@ -12,7 +12,7 @@ from app.core.database import (
 from app.models.startup import Startup, StartupCreate, StartupPublic, StartupUpdate
 from app.models.user import User
 from app.core.security import get_current_user
-from app.services.ai import generate_mock_analysis
+from app.services.ai import generate_ai_analysis
 
 router = APIRouter(prefix='/startups', tags=['Startups'])
 
@@ -36,7 +36,7 @@ async def add_new_startup(
         user_id=current_user.id,
         session=session,
     )
-    background_tasks.add_task(generate_mock_analysis, new_startup.id)
+    background_tasks.add_task(generate_ai_analysis, new_startup.id)
     return new_startup
 
 
