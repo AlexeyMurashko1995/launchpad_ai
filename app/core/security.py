@@ -9,7 +9,7 @@ from app.models.user import User
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login')
 
 SECRET_KEY = 'my_secret_key'
 
