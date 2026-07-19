@@ -59,9 +59,9 @@ class StartupUpdate(BaseModel):
     name: str | None = None
     category: str | None = None
 
-    @field_validator('name')
+    @field_validator('name', 'category')
     @classmethod
-    def clean_name(cls, value: str) -> str:
+    def clean_name(cls, value: str | None) -> str | None:
         if value:
             return value.strip()
         return value
